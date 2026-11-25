@@ -1,4 +1,4 @@
-from gemini_provider import generate, ProviderError
+from gemini_provider import generate, ProviderError, AuthError
 
 SYSTEM = """You are a friendly tutor for BCA students at Bangalore University.
 Explain in simple English with one small example.
@@ -10,9 +10,10 @@ If you are not sure about the exact syllabus, say so and do not invent it."""
 def ask(question):
     try:
         return generate(question, system=SYSTEM)["text"]
+    except AuthError as e:
+        return f"Setup problem: {e}"
     except ProviderError as e:
         return str(e)
-
 
 def quiz(topic):
     prompt = (
